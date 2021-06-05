@@ -1,16 +1,32 @@
-My first change
-Second change reflected
+pipeline {
+    agent any
+    tools {nodejs "node16"}
+    environment{
+        NODE_ENY="Production"
+    }
 
-This is 3rd changes
-
-
-this is lastest 4th version
-
-
-test test test
-
-
-last test
-
-
-last time scm test    
+    
+    stages {
+        stage('source') {
+            steps {
+                git 'https://github.com/sd031/aws_codebuild_codedeploy_nodeJs_demo.git'
+            }
+        }
+        
+            stage('build') {
+                steps {
+                    echo NODE_ENY
+                    withCredentials([string(credentialsId: '7479cf84-2e88-43b8-a01c-7564864dabd0', variable: 'secver')]) {
+                        // some block
+                    echo secver
+                    }
+                    sh 'npm install'
+                    }
+                }
+         stage('saveArtifacts') {
+                steps {
+                    archiveArtifacts artifacts: '*', followSymlinks: false
+                    }
+                }
+}
+}
